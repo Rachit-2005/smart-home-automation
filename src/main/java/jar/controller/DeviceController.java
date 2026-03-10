@@ -1,9 +1,11 @@
 package jar.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,6 +58,18 @@ public double getCurrentLoad(){
 @PostMapping("/autoshutoff")
 public List<Device> autoShutoff(){
     return deviceService.autoShutoff();
+}
+
+@PostMapping("/login")
+public ResponseEntity<String> login(@RequestBody Map<String, String> credentials) {
+    String username = credentials.get("username");
+    String password = credentials.get("password");
+
+    if (username.equals("admin") && password.equals("smarthome123")) {
+        return ResponseEntity.ok("Login successful");
+    } else {
+        return ResponseEntity.status(401).body("Invalid username or password");
+    }
 }
 
 
