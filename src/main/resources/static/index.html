@@ -1,751 +1,511 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SmartHome — Control Panel</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <title>Smart Home — Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --bg: #f5f6fa;
-      --surface: #ffffff;
-      --surface2: #f0f2f8;
-      --border: #e4e7f0;
-      --text: #1a1d2e;
-      --text-muted: #8890a8;
-      --text-soft: #5a6080;
-      --accent: #4f6ef7;
-      --accent-soft: #eef0fe;
-      --accent-hover: #3a59e8;
-      --green: #22c55e;
-      --green-soft: #dcfce7;
-      --red: #ef4444;
-      --red-soft: #fee2e2;
-      --amber: #f59e0b;
-      --amber-soft: #fef3c7;
-      --purple: #8b5cf6;
-      --purple-soft: #ede9fe;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-      --shadow: 0 4px 16px rgba(0,0,0,0.08);
-      --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
-      --radius: 14px;
-      --radius-sm: 8px;
-      --radius-xs: 6px;
-      --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+      --bg: #060918;
+      --card: rgba(255,255,255,0.04);
+      --card-border: rgba(255,255,255,0.09);
+      --accent: #4f8aff;
+      --accent2: #a78bfa;
+      --accent-glow: rgba(79,138,255,0.35);
+      --text: #f1f5ff;
+      --muted: #8892aa;
+      --input-bg: rgba(255,255,255,0.05);
+      --input-border: rgba(255,255,255,0.1);
+      --input-focus: rgba(79,138,255,0.5);
+      --error: #ff6b6b;
+      --success: #4ade80;
     }
 
-    [data-theme="dark"] {
-      --bg: #0f1117;
-      --surface: #1a1d2a;
-      --surface2: #22263a;
-      --border: #2a2f47;
-      --text: #e8ecf8;
-      --text-muted: #5a6080;
-      --text-soft: #8890a8;
-      --accent: #6b85fa;
-      --accent-soft: #1e2340;
-      --accent-hover: #8099fb;
-      --green: #34d399;
-      --green-soft: #0d2e1e;
-      --red: #f87171;
-      --red-soft: #2e0d0d;
-      --amber: #fbbf24;
-      --amber-soft: #2e1e0d;
-      --purple: #a78bfa;
-      --purple-soft: #1e1030;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
-      --shadow: 0 4px 16px rgba(0,0,0,0.4);
-      --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'DM Sans', sans-serif;
       background: var(--bg);
-      color: var(--text);
       min-height: 100vh;
-      transition: background var(--transition), color var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
     }
 
-    ::-webkit-scrollbar { width: 5px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-
-    .header {
-      position: sticky; top: 0; z-index: 100;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 0 28px; height: 62px;
-      display: flex; align-items: center; justify-content: space-between;
-      box-shadow: var(--shadow-sm);
-      transition: background var(--transition), border-color var(--transition);
+    /* ── BACKGROUND ── */
+    .bg-mesh {
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 10%, rgba(79,138,255,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 80%, rgba(167,139,250,0.15) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 50% 50%, rgba(79,138,255,0.06) 0%, transparent 70%);
     }
 
-    .header-left { display: flex; align-items: center; gap: 14px; }
-
-    .logo { display: flex; align-items: center; gap: 10px; }
-
-    .logo-mark {
-      width: 34px; height: 34px;
-      background: var(--accent); border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 17px;
-      box-shadow: 0 4px 12px rgba(79,110,247,0.35);
+    .bg-grid {
+      position: fixed; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
     }
 
-    .logo-name { font-size: 17px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
-    .logo-name span { color: var(--accent); }
+    /* Floating orbs */
+    .orb {
+      position: fixed; border-radius: 50%; filter: blur(80px);
+      animation: drift 12s ease-in-out infinite alternate;
+      z-index: 0; pointer-events: none;
+    }
+    .orb-1 { width: 400px; height: 400px; background: rgba(79,138,255,0.12); top: -100px; left: -100px; animation-delay: 0s; }
+    .orb-2 { width: 300px; height: 300px; background: rgba(167,139,250,0.1); bottom: -80px; right: -80px; animation-delay: -4s; }
+    .orb-3 { width: 200px; height: 200px; background: rgba(79,138,255,0.08); top: 50%; left: 60%; animation-delay: -8s; }
 
-    .header-divider { width: 1px; height: 22px; background: var(--border); }
-
-    .system-status {
-      display: flex; align-items: center; gap: 6px;
-      font-size: 12px; font-weight: 500; color: var(--green);
-      background: var(--green-soft); padding: 4px 10px; border-radius: 20px;
+    @keyframes drift {
+      from { transform: translate(0, 0) scale(1); }
+      to   { transform: translate(30px, 20px) scale(1.05); }
     }
 
-    .status-dot {
-      width: 6px; height: 6px; border-radius: 50%; background: var(--green);
-      animation: pulse 2s ease-in-out infinite;
+    /* ── CARD ── */
+    .card-wrap {
+      position: relative; z-index: 10;
+      width: 100%; max-width: 420px;
+      padding: 20px;
+      animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.8); }
-    }
-
-    .header-right { display: flex; align-items: center; gap: 10px; }
-
-    .header-time {
-      font-family: 'DM Mono', monospace; font-size: 13px;
-      color: var(--text-muted); background: var(--surface2);
-      padding: 5px 12px; border-radius: 20px;
-    }
-
-    .theme-toggle {
-      width: 36px; height: 36px; border-radius: 10px;
-      border: 1px solid var(--border); background: var(--surface2);
-      color: var(--text-soft); cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px; transition: all var(--transition);
-    }
-
-    .theme-toggle:hover { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
-
-    .layout { display: grid; grid-template-columns: 300px 1fr; height: calc(100vh - 62px); }
-
-    .sidebar {
-      background: var(--surface); border-right: 1px solid var(--border);
-      overflow-y: auto; padding: 20px;
-      display: flex; flex-direction: column; gap: 14px;
-      transition: background var(--transition);
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(32px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     .card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 18px;
-      transition: background var(--transition), border-color var(--transition);
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 44px 40px 36px;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.04) inset,
+        0 32px 80px rgba(0,0,0,0.5),
+        0 0 60px rgba(79,138,255,0.06);
+      position: relative;
+      overflow: hidden;
     }
+
+    /* Card shimmer top edge */
+    .card::before {
+      content: '';
+      position: absolute; top: 0; left: 20%; right: 20%; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(79,138,255,0.6), rgba(167,139,250,0.6), transparent);
+    }
+
+    /* ── HEADER ── */
+    .logo {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .logo-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 8px 24px var(--accent-glow);
+    }
+
+    .logo-text { line-height: 1.2; }
+    .logo-text .name { font-size: 17px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
+    .logo-text .tagline { font-size: 11px; color: var(--muted); font-weight: 400; letter-spacing: 0.5px; text-transform: uppercase; }
 
     .card-title {
-      font-size: 11px; font-weight: 600; letter-spacing: 0.8px;
-      text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px;
+      font-size: 26px; font-weight: 700; color: var(--text);
+      letter-spacing: -0.6px; margin-bottom: 6px;
     }
 
-    .load-hero { display: flex; align-items: flex-end; gap: 6px; margin-bottom: 6px; }
-
-    .load-number {
-      font-size: 38px; font-weight: 700; line-height: 1;
-      color: var(--text); letter-spacing: -1px; transition: color var(--transition);
+    .card-sub {
+      font-size: 14px; color: var(--muted); margin-bottom: 32px; font-weight: 400;
     }
 
-    .load-unit { font-size: 14px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; }
-    .load-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
-    .load-sub span { color: var(--text-soft); font-weight: 500; }
+    /* ── FORM ── */
+    .field { margin-bottom: 18px; }
 
-    .progress-track { height: 6px; background: var(--surface2); border-radius: 10px; overflow: hidden; margin-bottom: 6px; }
-
-    .progress-fill {
-      height: 100%; border-radius: 10px; background: var(--accent);
-      transition: width 0.6s cubic-bezier(0.4,0,0.2,1), background 0.3s; width: 0%;
+    .field label {
+      display: block; font-size: 12px; font-weight: 600;
+      color: var(--muted); letter-spacing: 0.6px;
+      text-transform: uppercase; margin-bottom: 8px;
     }
 
-    .progress-fill.warn { background: var(--amber); }
-    .progress-fill.danger { background: var(--red); }
-
-    .load-footer { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); }
-
-    .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-
-    .stat-box {
-      background: var(--surface2); border-radius: var(--radius-sm);
-      padding: 12px; text-align: center; transition: background var(--transition);
+    .input-wrap {
+      position: relative; display: flex; align-items: center;
     }
 
-    .stat-val { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; margin-bottom: 4px; }
-    .stat-lbl { font-size: 10px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-muted); }
-
-    .btn {
-      display: flex; align-items: center; justify-content: center; gap: 7px;
-      padding: 10px 16px; border-radius: var(--radius-sm);
-      font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
-      cursor: pointer; transition: all var(--transition); border: none; width: 100%;
+    .input-icon {
+      position: absolute; left: 14px;
+      color: var(--muted); font-size: 15px;
+      pointer-events: none; transition: color 0.2s;
+      display: flex; align-items: center;
     }
 
-    .btn-primary { background: var(--accent); color: #fff; box-shadow: 0 2px 8px rgba(79,110,247,0.3); }
-    .btn-primary:hover { background: var(--accent-hover); box-shadow: 0 4px 14px rgba(79,110,247,0.4); transform: translateY(-1px); }
-
-    .btn-danger { background: var(--red-soft); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
-    .btn-danger:hover { background: var(--red); color: #fff; transform: translateY(-1px); }
-
-    .btn-outline { background: transparent; color: var(--text-soft); border: 1px solid var(--border); }
-    .btn-outline:hover { background: var(--surface2); color: var(--text); }
-
-    .form-group { margin-bottom: 11px; }
-
-    .form-label {
-      font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
-      text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 5px;
+    .input-wrap input {
+      width: 100%;
+      padding: 12px 14px 12px 42px;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 12px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px; font-weight: 400;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+      -webkit-text-fill-color: var(--text);
     }
 
-    .form-control {
-      width: 100%; padding: 8px 12px;
-      background: var(--surface2); border: 1px solid var(--border);
-      border-radius: var(--radius-xs); color: var(--text);
-      font-family: 'DM Sans', sans-serif; font-size: 13px;
-      outline: none; transition: all var(--transition); appearance: none;
+    .input-wrap input::placeholder { color: rgba(136,146,170,0.5); }
+
+    .input-wrap input:focus {
+      border-color: var(--accent);
+      background: rgba(79,138,255,0.06);
+      box-shadow: 0 0 0 3px var(--accent-glow);
     }
 
-    .form-control:focus {
-      border-color: var(--accent); background: var(--surface);
-      box-shadow: 0 0 0 3px rgba(79,110,247,0.1);
+    .input-wrap input:focus ~ .input-icon,
+    .input-wrap:focus-within .input-icon { color: var(--accent); }
+
+    /* Password toggle */
+    .pw-toggle {
+      position: absolute; right: 14px;
+      background: none; border: none; cursor: pointer;
+      color: var(--muted); font-size: 15px;
+      display: flex; align-items: center;
+      transition: color 0.2s; padding: 4px;
     }
+    .pw-toggle:hover { color: var(--text); }
 
-    .form-control::placeholder { color: var(--text-muted); }
-
-    select.form-control {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238890a8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-      background-repeat: no-repeat; background-position: right 10px center;
-      padding-right: 30px; cursor: pointer;
-    }
-
-    select.form-control option { background: var(--surface); }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-    .content { overflow-y: auto; padding: 24px; background: var(--bg); transition: background var(--transition); }
-
-    .content-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
-
-    .content-title { font-size: 18px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
-    .content-sub { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
-
-    .filter-row { display: flex; gap: 6px; flex-wrap: wrap; }
-
-    .filter-pill {
-      padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
-      cursor: pointer; border: 1px solid var(--border); background: var(--surface);
-      color: var(--text-muted); transition: all var(--transition);
-    }
-
-    .filter-pill:hover { border-color: var(--accent); color: var(--accent); }
-    .filter-pill.active { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 2px 8px rgba(79,110,247,0.3); }
-
-    .devices-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
-
-    .device-card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 18px;
-      transition: all var(--transition);
-      animation: slide-in 0.25s ease-out; position: relative; overflow: hidden;
-    }
-
-    @keyframes slide-in {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .device-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); border-color: rgba(79,110,247,0.2); }
-
-    .device-card.active { border-color: rgba(34,197,94,0.25); }
-
-    .device-card.active::after {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-      background: linear-gradient(90deg, var(--green), #86efac);
-      border-radius: var(--radius) var(--radius) 0 0;
-    }
-
-    .dc-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; }
-
-    .dc-icon-wrap {
-      width: 42px; height: 42px; border-radius: 12px;
-      background: var(--surface2); display: flex; align-items: center; justify-content: center;
-      font-size: 20px; transition: background var(--transition);
-    }
-
-    .device-card.active .dc-icon-wrap { background: var(--green-soft); }
-
-    .dc-badge { padding: 3px 9px; border-radius: 20px; font-size: 10px; font-weight: 700; letter-spacing: 0.3px; }
-
-    .badge-COMFORT { background: var(--purple-soft); color: var(--purple); }
-    .badge-NON_ESSENTIAL { background: var(--accent-soft); color: var(--accent); }
-    .badge-NECESSARY { background: var(--green-soft); color: var(--green); }
-    .badge-CRITICAL { background: var(--red-soft); color: var(--red); }
-
-    .dc-name { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .dc-type { font-size: 11px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-
-    .dc-meta {
+    /* ── ROW: remember + forgot ── */
+    .row-meta {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 10px 12px; background: var(--surface2); border-radius: var(--radius-xs);
-      margin: 12px 0; transition: background var(--transition);
+      margin-bottom: 28px; margin-top: -4px;
     }
 
-    .dc-power { font-size: 16px; font-weight: 700; color: var(--text); }
-    .dc-power-label { font-size: 10px; color: var(--text-muted); font-weight: 500; }
-
-    .dc-status { display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; }
-
-    .dc-status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); }
-
-    .device-card.active .dc-status-dot { background: var(--green); box-shadow: 0 0 0 2px var(--green-soft); animation: pulse 2s infinite; }
-
-    .dc-status.on { color: var(--green); }
-    .dc-status.off { color: var(--text-muted); }
-
-    .dc-actions { display: flex; gap: 8px; }
-
-    .dc-toggle {
-      flex: 1; padding: 8px 12px; border-radius: var(--radius-xs);
-      font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600;
-      cursor: pointer; transition: all var(--transition);
-      border: 1px solid var(--border); background: var(--surface2); color: var(--text-soft);
+    .remember {
+      display: flex; align-items: center; gap: 8px; cursor: pointer;
     }
 
-    .device-card.active .dc-toggle { background: var(--green-soft); border-color: rgba(34,197,94,0.3); color: var(--green); }
-    .dc-toggle:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
-    .device-card.active .dc-toggle:hover { background: var(--red-soft); border-color: rgba(239,68,68,0.3); color: var(--red); }
+    .remember input[type="checkbox"] { display: none; }
 
-    .dc-delete {
-      width: 34px; border-radius: var(--radius-xs); border: 1px solid var(--border);
-      background: var(--surface2); color: var(--text-muted); cursor: pointer;
-      transition: all var(--transition); display: flex; align-items: center; justify-content: center; font-size: 14px;
-    }
-
-    .dc-delete:hover { background: var(--red-soft); border-color: rgba(239,68,68,0.3); color: var(--red); }
-
-    .empty { grid-column: 1/-1; text-align: center; padding: 64px 20px; }
-    .empty-icon { font-size: 52px; margin-bottom: 16px; opacity: 0.4; }
-    .empty-title { font-size: 16px; font-weight: 600; color: var(--text-soft); margin-bottom: 6px; }
-    .empty-sub { font-size: 13px; color: var(--text-muted); }
-
-    .toasts { position: fixed; bottom: 20px; right: 20px; z-index: 999; display: flex; flex-direction: column; gap: 8px; }
-
-    .toast {
-      display: flex; align-items: center; gap: 10px; padding: 12px 16px;
-      border-radius: var(--radius-sm); background: var(--surface); border: 1px solid var(--border);
-      box-shadow: var(--shadow-lg); font-size: 13px; font-weight: 500; color: var(--text);
-      animation: toast-in 0.3s ease-out; min-width: 240px; max-width: 320px;
-    }
-
-    .toast-icon { font-size: 16px; }
-    .toast.success .toast-icon::before { content: '✓'; color: var(--green); font-weight: 700; }
-    .toast.error .toast-icon::before { content: '✕'; color: var(--red); font-weight: 700; }
-    .toast.warn .toast-icon::before { content: '!'; color: var(--amber); font-weight: 700; }
-
-    @keyframes toast-in {
-      from { opacity: 0; transform: translateX(16px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-
-    .overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.4);
-      backdrop-filter: blur(4px); z-index: 200;
+    .check-box {
+      width: 16px; height: 16px; border-radius: 4px;
+      border: 1.5px solid var(--input-border);
+      background: var(--input-bg);
       display: flex; align-items: center; justify-content: center;
-      opacity: 0; pointer-events: none; transition: opacity 0.2s;
+      transition: all 0.2s; flex-shrink: 0;
     }
 
-    .overlay.open { opacity: 1; pointer-events: all; }
-
-    .modal {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 24px; width: 360px;
-      box-shadow: var(--shadow-lg); transform: scale(0.96); transition: transform 0.2s;
+    .remember input:checked + .check-box {
+      background: var(--accent);
+      border-color: var(--accent);
+      box-shadow: 0 0 10px var(--accent-glow);
     }
 
-    .overlay.open .modal { transform: scale(1); }
-
-    .modal-title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
-    .modal-body { font-size: 13px; color: var(--text-soft); line-height: 1.6; margin-bottom: 20px; }
-    .modal-actions { display: flex; gap: 8px; }
-
-    .shutoff-items { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; max-height: 180px; overflow-y: auto; }
-
-    .shutoff-item {
-      display: flex; align-items: center; gap: 10px; padding: 8px 12px;
-      background: var(--red-soft); border-radius: var(--radius-xs);
-      font-size: 12px; font-weight: 500; color: var(--red);
+    .check-mark {
+      color: white; font-size: 10px; font-weight: 700;
+      opacity: 0; transform: scale(0.5);
+      transition: all 0.15s;
     }
 
-    .legend { display: flex; flex-direction: column; gap: 7px; }
-    .legend-item { display: flex; align-items: center; justify-content: space-between; font-size: 12px; }
-    .legend-left { display: flex; align-items: center; gap: 8px; color: var(--text-soft); }
-    .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
-    .legend-count { font-size: 12px; font-weight: 600; color: var(--text-muted); background: var(--surface2); padding: 1px 8px; border-radius: 10px; }
+    .remember input:checked + .check-box .check-mark {
+      opacity: 1; transform: scale(1);
+    }
+
+    .remember-label { font-size: 13px; color: var(--muted); user-select: none; }
+
+    .forgot {
+      font-size: 13px; color: var(--accent);
+      text-decoration: none; font-weight: 500;
+      transition: opacity 0.2s;
+    }
+    .forgot:hover { opacity: 0.7; }
+
+    /* ── ERROR ── */
+    .error-msg {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(255,107,107,0.1);
+      border: 1px solid rgba(255,107,107,0.25);
+      border-radius: 10px; padding: 10px 14px;
+      margin-bottom: 20px;
+      color: var(--error); font-size: 13px; font-weight: 500;
+      opacity: 0; transform: translateY(-6px);
+      transition: all 0.3s; pointer-events: none;
+    }
+    .error-msg.show {
+      opacity: 1; transform: translateY(0); pointer-events: auto;
+    }
+
+    /* ── BUTTON ── */
+    .btn-login {
+      width: 100%; padding: 13px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none; border-radius: 12px;
+      color: white; font-family: 'DM Sans', sans-serif;
+      font-size: 15px; font-weight: 600; letter-spacing: -0.2px;
+      cursor: pointer; position: relative; overflow: hidden;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 8px 24px var(--accent-glow);
+    }
+
+    .btn-login::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+      opacity: 0; transition: opacity 0.2s;
+    }
+
+    .btn-login:hover { transform: translateY(-1px); box-shadow: 0 12px 32px var(--accent-glow); }
+    .btn-login:hover::before { opacity: 1; }
+    .btn-login:active { transform: translateY(1px); }
+
+    .btn-login.loading {
+      pointer-events: none; opacity: 0.8;
+    }
+
+    .btn-text { transition: opacity 0.2s; }
+    .btn-spinner {
+      position: absolute; inset: 0; display: flex;
+      align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.2s;
+    }
+    .btn-login.loading .btn-text { opacity: 0; }
+    .btn-login.loading .btn-spinner { opacity: 1; }
+
+    .spinner {
+      width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white; border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── DIVIDER ── */
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 24px 0; color: var(--muted); font-size: 12px;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1; height: 1px;
+      background: var(--input-border);
+    }
+
+    /* ── FOOTER ── */
+    .signup-row {
+      text-align: center; font-size: 13px; color: var(--muted);
+      margin-top: 20px;
+    }
+    .signup-row a {
+      color: var(--accent); font-weight: 600;
+      text-decoration: none; transition: opacity 0.2s;
+    }
+    .signup-row a:hover { opacity: 0.7; }
+
+    /* Credentials hint */
+    .hint {
+      margin-top: 20px;
+      background: rgba(79,138,255,0.07);
+      border: 1px solid rgba(79,138,255,0.15);
+      border-radius: 10px; padding: 10px 14px;
+      font-size: 12px; color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      text-align: center; line-height: 1.7;
+    }
+    .hint span { color: var(--accent); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 480px) {
+      .card { padding: 36px 24px 28px; }
+      .card-title { font-size: 22px; }
+    }
   </style>
 </head>
 <body>
 
-  <header class="header">
-    <div class="header-left">
+  <div class="bg-mesh"></div>
+  <div class="bg-grid"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="card-wrap">
+    <div class="card">
+
+      <!-- Logo -->
       <div class="logo">
-        <div class="logo-mark">🏠</div>
-        <div class="logo-name">Smart<span>Home</span></div>
-      </div>
-      <div class="header-divider"></div>
-      <div class="system-status">
-        <div class="status-dot"></div>
-        System Online
-      </div>
-    </div>
-    <div class="header-right">
-      <div class="header-time" id="clock">--:--:--</div>
-      <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">🌙</button>
-    </div>
-  </header>
-
-  <div class="layout">
-    <aside class="sidebar">
-      <div class="card">
-        <div class="card-title">Power Load Monitor</div>
-        <div class="load-hero">
-          <div class="load-number" id="load-val">0</div>
-          <div class="load-unit">W</div>
-        </div>
-        <div class="load-sub">of <span>5,000W</span> sanctioned limit</div>
-        <div class="progress-track">
-          <div class="progress-fill" id="load-bar"></div>
-        </div>
-        <div class="load-footer">
-          <span id="load-pct">0%</span>
-          <span id="load-status-text" style="color:var(--green)">✓ Normal</span>
+        <div class="logo-icon">🏠</div>
+        <div class="logo-text">
+          <div class="name">Smart Home</div>
+          <div class="tagline">Automation System</div>
         </div>
       </div>
 
-      <div class="stats-row">
-        <div class="stat-box">
-          <div class="stat-val" id="stat-total">0</div>
-          <div class="stat-lbl">Total</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-val" style="color:var(--green)" id="stat-active">0</div>
-          <div class="stat-lbl">Active</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-val" style="color:var(--text-muted)" id="stat-inactive">0</div>
-          <div class="stat-lbl">Off</div>
+      <div class="card-title">Welcome back</div>
+      <div class="card-sub">Sign in to manage your devices</div>
+
+      <!-- Error -->
+      <div class="error-msg" id="errorMsg">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span id="errorText">Invalid username or password</span>
+      </div>
+
+      <!-- Username -->
+      <div class="field">
+        <label>Username</label>
+        <div class="input-wrap">
+          <span class="input-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </span>
+          <input type="text" id="username" placeholder="Enter your username" autocomplete="username"/>
         </div>
       </div>
 
-      <button class="btn btn-danger" onclick="autoShutoff()">⚡ Auto Shutoff</button>
-
-      <div class="card">
-        <div class="card-title">Priority Breakdown</div>
-        <div class="legend">
-          <div class="legend-item">
-            <div class="legend-left"><div class="legend-dot" style="background:var(--purple)"></div>Comfort</div>
-            <span class="legend-count" id="lg-comfort">0</span>
-          </div>
-          <div class="legend-item">
-            <div class="legend-left"><div class="legend-dot" style="background:var(--accent)"></div>Non Essential</div>
-            <span class="legend-count" id="lg-non">0</span>
-          </div>
-          <div class="legend-item">
-            <div class="legend-left"><div class="legend-dot" style="background:var(--green)"></div>Necessary</div>
-            <span class="legend-count" id="lg-necessary">0</span>
-          </div>
-          <div class="legend-item">
-            <div class="legend-left"><div class="legend-dot" style="background:var(--red)"></div>Critical</div>
-            <span class="legend-count" id="lg-critical">0</span>
-          </div>
+      <!-- Password -->
+      <div class="field">
+        <label>Password</label>
+        <div class="input-wrap">
+          <span class="input-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </span>
+          <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password"/>
+          <button class="pw-toggle" onclick="togglePw()" type="button" id="pwBtn">
+            <svg id="eyeIcon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-title">Add New Device</div>
-        <div class="form-group">
-          <label class="form-label">Device Name</label>
-          <input class="form-control" id="f-name" type="text" placeholder="e.g. Living Room AC"/>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Type</label>
-            <select class="form-control" id="f-type">
-              <option value="AC">AC</option>
-              <option value="FAN">Fan</option>
-              <option value="LIGHT">Light</option>
-              <option value="REFRIGERATOR">Refrigerator</option>
-              <option value="TV">TV</option>
-              <option value="ROUTER">Router</option>
-              <option value="MEDICAL">Medical</option>
-              <option value="OTHER">Other</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Power (W)</label>
-            <input class="form-control" id="f-power" type="number" placeholder="1500" min="0"/>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Priority</label>
-          <select class="form-control" id="f-priority">
-            <option value="COMFORT">Comfort</option>
-            <option value="NON_ESSENTIAL">Non Essential</option>
-            <option value="NECESSARY">Necessary</option>
-            <option value="CRITICAL">Critical</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Custom ID <span style="color:var(--text-muted);font-weight:400;text-transform:none">(optional)</span></label>
-          <input class="form-control" id="f-id" type="text" placeholder="Leave blank to auto-generate"/>
-        </div>
-        <button class="btn btn-primary" onclick="addDevice()">+ Add Device</button>
+      <!-- Remember + Forgot -->
+      <div class="row-meta">
+        <label class="remember">
+          <input type="checkbox" id="rememberMe"/>
+          <div class="check-box"><span class="check-mark">✓</span></div>
+          <span class="remember-label">Remember me</span>
+        </label>
+        <a href="#" class="forgot" onclick="forgotPw(event)">Forgot password?</a>
       </div>
-    </aside>
 
-    <main class="content">
-      <div class="content-header">
-        <div>
-          <div class="content-title">Device Dashboard</div>
-          <div class="content-sub" id="device-count-sub">No devices registered</div>
-        </div>
-        <div class="filter-row">
-          <button class="filter-pill active" onclick="setFilter('ALL',this)">All</button>
-          <button class="filter-pill" onclick="setFilter('on',this)">Active</button>
-          <button class="filter-pill" onclick="setFilter('off',this)">Inactive</button>
-          <button class="filter-pill" onclick="setFilter('CRITICAL',this)">Critical</button>
-          <button class="filter-pill" onclick="setFilter('COMFORT',this)">Comfort</button>
-        </div>
+      <!-- Button -->
+      <button class="btn-login" id="loginBtn" onclick="login()">
+        <span class="btn-text">Sign In</span>
+        <span class="btn-spinner"><div class="spinner"></div></span>
+      </button>
+
+      <div class="divider">or</div>
+
+      <div class="signup-row">
+        Don't have an account? <a href="#">Sign Up</a>
       </div>
-      <div class="devices-grid" id="grid"></div>
-    </main>
-  </div>
 
-  <div class="toasts" id="toasts"></div>
-
-  <div class="overlay" id="del-overlay">
-    <div class="modal">
-      <div class="modal-title">Remove Device</div>
-      <div class="modal-body" id="del-body">Are you sure you want to remove this device?</div>
-      <div class="modal-actions">
-        <button class="btn btn-outline" style="flex:1" onclick="closeModal('del-overlay')">Cancel</button>
-        <button class="btn btn-danger" style="flex:1" onclick="confirmDelete()">Remove</button>
+      <!-- Hint -->
+      <div class="hint">
+        Demo credentials &nbsp;·&nbsp;
+        user: <span>admin</span> &nbsp;·&nbsp;
+        pass: <span>smarthome123</span>
       </div>
-    </div>
-  </div>
 
-  <div class="overlay" id="shutoff-overlay">
-    <div class="modal">
-      <div class="modal-title">⚡ Auto Shutoff Complete</div>
-      <div class="modal-body" id="shutoff-body"></div>
-      <div class="shutoff-items" id="shutoff-items"></div>
-      <div class="modal-actions" style="margin-top:16px">
-        <button class="btn btn-outline" style="flex:1" onclick="closeModal('shutoff-overlay')">Close</button>
-      </div>
     </div>
   </div>
 
   <script>
-    const API = 'http://localhost:8080/devices';
-    let devices = [];
-    let filter = 'ALL';
-    let deleteId = null;
-    const ICONS = { AC:'❄️', FAN:'🌀', LIGHT:'💡', REFRIGERATOR:'🧊', TV:'📺', ROUTER:'📡', MEDICAL:'🏥', OTHER:'🔌' };
+    // Enter key support
+    document.getElementById('username').addEventListener('keydown', e => { if(e.key === 'Enter') document.getElementById('password').focus(); });
+    document.getElementById('password').addEventListener('keydown', e => { if(e.key === 'Enter') login(); });
 
-    setInterval(() => {
-      document.getElementById('clock').textContent = new Date().toLocaleTimeString();
-    }, 1000);
-
-    let dark = false;
-    function toggleTheme() {
-      dark = !dark;
-      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
-      document.getElementById('theme-btn').textContent = dark ? '☀️' : '🌙';
+    function togglePw() {
+      const input = document.getElementById('password');
+      const icon = document.getElementById('eyeIcon');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+      } else {
+        input.type = 'password';
+        icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+      }
     }
 
-    async function fetchAll() {
-      try {
-        const [devRes, loadRes] = await Promise.all([fetch(API), fetch(`${API}/load`)]);
-        devices = await devRes.json();
-        const load = await loadRes.json();
-        render(); updateStats(); updateLoad(load);
-      } catch(e) { toast('Cannot connect to backend', 'error'); }
+    function showError(msg) {
+      const el = document.getElementById('errorMsg');
+      document.getElementById('errorText').textContent = msg;
+      el.classList.add('show');
+      document.getElementById('username').style.borderColor = 'rgba(255,107,107,0.5)';
+      document.getElementById('password').style.borderColor = 'rgba(255,107,107,0.5)';
     }
 
-    function render() {
-      const grid = document.getElementById('grid');
-      let list = devices;
-      if (filter === 'on') list = devices.filter(d => d.on);
-      else if (filter === 'off') list = devices.filter(d => !d.on);
-      else if (filter === 'CRITICAL') list = devices.filter(d => d.priority === 'CRITICAL');
-      else if (filter === 'COMFORT') list = devices.filter(d => d.priority === 'COMFORT');
+    function hideError() {
+      document.getElementById('errorMsg').classList.remove('show');
+      document.getElementById('username').style.borderColor = '';
+      document.getElementById('password').style.borderColor = '';
+    }
 
-      if (!list.length) {
-        grid.innerHTML = `<div class="empty"><div class="empty-icon">🏠</div><div class="empty-title">No devices found</div><div class="empty-sub">Add a device using the form on the left</div></div>`;
+    async function login() {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+      const btn = document.getElementById('loginBtn');
+
+      hideError();
+
+      if (!username || !password) {
+        showError('Please fill in all fields');
         return;
       }
 
-      grid.innerHTML = list.map(d => `
-        <div class="device-card ${d.on ? 'active' : ''}">
-          <div class="dc-top">
-            <div class="dc-icon-wrap">${ICONS[d.deviceType] || '🔌'}</div>
-            <span class="dc-badge badge-${d.priority}">${d.priority.replace('_',' ')}</span>
-          </div>
-          <div class="dc-name">${d.name}</div>
-          <div class="dc-type">${d.deviceType}</div>
-          <div class="dc-meta">
-            <div>
-              <div class="dc-power">${d.power}W</div>
-              <div class="dc-power-label">Power Draw</div>
-            </div>
-            <div class="dc-status ${d.on ? 'on' : 'off'}">
-              <div class="dc-status-dot"></div>
-              ${d.on ? 'Online' : 'Offline'}
-            </div>
-          </div>
-          <div class="dc-actions">
-            <button class="dc-toggle" onclick="toggleDevice('${d.id}')">${d.on ? '⏹ Turn Off' : '▶ Turn On'}</button>
-            <button class="dc-delete" onclick="openDelete('${d.id}','${d.name.replace(/'/g,"\\'")}')">🗑</button>
-          </div>
-        </div>`).join('');
-    }
-
-    function updateStats() {
-      const active = devices.filter(d => d.on).length;
-      document.getElementById('stat-total').textContent = devices.length;
-      document.getElementById('stat-active').textContent = active;
-      document.getElementById('stat-inactive').textContent = devices.length - active;
-      document.getElementById('device-count-sub').textContent = devices.length ? `${devices.length} device${devices.length > 1 ? 's' : ''} registered` : 'No devices registered';
-      document.getElementById('lg-comfort').textContent = devices.filter(d => d.priority === 'COMFORT').length;
-      document.getElementById('lg-non').textContent = devices.filter(d => d.priority === 'NON_ESSENTIAL').length;
-      document.getElementById('lg-necessary').textContent = devices.filter(d => d.priority === 'NECESSARY').length;
-      document.getElementById('lg-critical').textContent = devices.filter(d => d.priority === 'CRITICAL').length;
-    }
-
-    function updateLoad(load) {
-      const max = 5000;
-      const pct = Math.min((load / max) * 100, 100);
-      document.getElementById('load-val').textContent = Math.round(load);
-      document.getElementById('load-pct').textContent = pct.toFixed(1) + '%';
-      const bar = document.getElementById('load-bar');
-      bar.style.width = pct + '%';
-      bar.className = 'progress-fill' + (pct >= 90 ? ' danger' : pct >= 70 ? ' warn' : '');
-      const st = document.getElementById('load-status-text');
-      if (pct >= 90) { st.textContent = '⚠ Critical'; st.style.color = 'var(--red)'; }
-      else if (pct >= 70) { st.textContent = '⚡ High'; st.style.color = 'var(--amber)'; }
-      else { st.textContent = '✓ Normal'; st.style.color = 'var(--green)'; }
-      document.getElementById('load-val').style.color = pct >= 90 ? 'var(--red)' : pct >= 70 ? 'var(--amber)' : 'var(--text)';
-    }
-
-    async function addDevice() {
-      const name = document.getElementById('f-name').value.trim();
-      const deviceType = document.getElementById('f-type').value;
-      const power = parseFloat(document.getElementById('f-power').value);
-      const priority = document.getElementById('f-priority').value;
-      const id = document.getElementById('f-id').value.trim();
-
-      if (!name) { toast('Please enter a device name', 'error'); return; }
-      if (isNaN(power) || power < 0) { toast('Please enter a valid power value', 'error'); return; }
-
-      const body = { name, deviceType, power, priority };
-      if (id) body.id = id;
+      // Loading state
+      btn.classList.add('loading');
 
       try {
-        const res = await fetch(API, {
+        const res = await fetch('http://localhost:8080/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body)
+          body: JSON.stringify({ username, password })
         });
+
         if (res.ok) {
-          document.getElementById('f-name').value = '';
-          document.getElementById('f-power').value = '';
-          document.getElementById('f-id').value = '';
-          toast(`${name} added successfully`, 'success');
-          fetchAll();
+          btn.style.background = 'linear-gradient(135deg, #4ade80, #22c55e)';
+          btn.querySelector('.btn-text').textContent = '✓ Success';
+          btn.classList.remove('loading');
+          setTimeout(() => { window.location.href = '/dashboard.html'; }, 800);
         } else {
-          const err = await res.text();
-          toast('Failed to add device: ' + err, 'error');
+          btn.classList.remove('loading');
+          showError('Invalid username or password');
+          // Shake animation
+          btn.style.animation = 'none';
+          document.querySelector('.card').style.animation = 'shake 0.4s ease';
+          setTimeout(() => { document.querySelector('.card').style.animation = ''; }, 400);
         }
-      } catch(e) { toast('Cannot connect to backend', 'error'); }
+      } catch(e) {
+        btn.classList.remove('loading');
+        showError('Cannot connect to server. Is it running?');
+      }
     }
 
-    async function toggleDevice(id) {
-      try {
-        const res = await fetch(`${API}/${id}`, { method: 'PUT' });
-        if (res.ok) {
-          const d = await res.json();
-          toast(`${d.name} turned ${d.on ? 'ON' : 'OFF'}`, 'success');
-          fetchAll();
-        }
-      } catch(e) { toast('Error toggling device', 'error'); }
+    function forgotPw(e) {
+      e.preventDefault();
+      const hint = document.querySelector('.hint');
+      hint.style.background = 'rgba(167,139,250,0.12)';
+      hint.style.borderColor = 'rgba(167,139,250,0.3)';
+      setTimeout(() => {
+        hint.style.background = '';
+        hint.style.borderColor = '';
+      }, 1500);
     }
-
-    function openDelete(id, name) {
-      deleteId = id;
-      document.getElementById('del-body').textContent = `Remove "${name}" from the system? This cannot be undone.`;
-      document.getElementById('del-overlay').classList.add('open');
-    }
-
-    async function confirmDelete() {
-      if (!deleteId) return;
-      try {
-        const res = await fetch(`${API}/${deleteId}`, { method: 'DELETE' });
-        const message = await res.text();
-        toast(message, res.ok ? 'success' : 'error');
-        if (res.ok) { toast('Device removed', 'success'); fetchAll(); }
-      } catch(e) { toast('Error removing device', 'error'); }
-      closeModal('del-overlay'); deleteId = null;
-    }
-
-    async function autoShutoff() {
-      try {
-        const res = await fetch(`${API}/autoshutoff`, { method: 'POST' });
-        const turned = await res.json();
-        fetchAll();
-        document.getElementById('shutoff-body').textContent = turned.length === 0
-          ? 'Load is within limits. No devices were turned off.'
-          : `${turned.length} device(s) were turned off to reduce load:`;
-        document.getElementById('shutoff-items').innerHTML = turned.map(d =>
-          `<div class="shutoff-item">⚡ ${d.name} — ${d.power}W (${d.priority.replace('_',' ')})</div>`).join('');
-        document.getElementById('shutoff-overlay').classList.add('open');
-      } catch(e) { toast('Error running auto shutoff', 'error'); }
-    }
-
-    function setFilter(f, btn) {
-      filter = f;
-      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
-      btn.classList.add('active');
-      render();
-    }
-
-    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-
-    document.querySelectorAll('.overlay').forEach(o => {
-      o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
-    });
-
-    function toast(msg, type = 'success') {
-      const el = document.createElement('div');
-      el.className = `toast ${type}`;
-      el.innerHTML = `<span class="toast-icon"></span>${msg}`;
-      document.getElementById('toasts').appendChild(el);
-      setTimeout(() => el.remove(), 3000);
-    }
-
-    document.getElementById('f-name').addEventListener('keypress', e => { if (e.key === 'Enter') addDevice(); });
-
-    fetchAll();
-    setInterval(fetchAll, 5000);
   </script>
+
+  <style>
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+    }
+  </style>
 </body>
 </html>
