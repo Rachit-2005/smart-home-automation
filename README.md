@@ -121,7 +121,6 @@ Password: smarthome123
 
 **Rachit Saxena**
 - GitHub: [@Rachit-2005](https://github.com/Rachit-2005)
-- LinkedIn: [Add your LinkedIn URL here]
 
 ---
 
